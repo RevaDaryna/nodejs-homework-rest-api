@@ -23,6 +23,7 @@ const getContactByIdCont = async (req, res) => {
 
 const addContactCont = async (req, res) => {
       const result = await addContact(req.body)
+      console.log(req.body)
       res.status(201).json(result) 
   }  
 
