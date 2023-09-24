@@ -1,25 +1,22 @@
 const express = require('express')
-
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const {validateBody} = require("../../middlewares")
+const {addSchema} = require('../../schemas/contacts')
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const ctrl = require('../../controllers/contacts')
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/', ctrl.listContacts)
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/:contactId', ctrl.getContactById)
+
+router.post('/', validateBody(addSchema), ctrl.addContact)
+// router.post('/', ctrl.addContact)
+
+router.delete('/:contactId', ctrl.removeContact)
+
+router.put('/:contactId',  validateBody(addSchema), ctrl.updateContact)
+// router.put('/:contactId', ctrl.updateContact)
 
 module.exports = router
