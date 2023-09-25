@@ -1,35 +1,29 @@
-const {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateContact,
-} = require("../models/contacts")
+const Contact = require('../models/contact')
 
 const { ctrlWrapper, HttpError } = require('../helpers');
 
 const listContactsCont = async (req, res) => {
-      const result = await listContacts();
+      const result = await Contact.find();
       res.json(result)
   }
 
 const getContactByIdCont = async (req, res) => {
       const {contactId} = req.params;
-      const result = await getContactById(contactId)
+      const result = await Contact.findById(contactId)
       if(!result){
         throw HttpError(404, "Not found")}
       res.json(result)
   }
 
 const addContactCont = async (req, res) => {
-      const result = await addContact(req.body)
+      const result = await Contact.create(req.body)
       console.log(req.body)
       res.status(201).json(result) 
   }  
 
 const removeContactCont = async (req, res) => {
      const {contactId} = req.params
-     const result = await removeContact(contactId)
+     const result = await Contact.findByIdAndRemove(contactId)
      if(!result){
        throw HttpError(404, "Not found")
      }
@@ -40,7 +34,16 @@ const removeContactCont = async (req, res) => {
 
 const updateContactCont = async (req, res) => {
       const {contactId} = req.params;
-      const result = await  updateContact(contactId, req.body)
+      const result = await Contact.findByIdAndUpdate(contactId, req.body, {new: true})
+      if(!result){
+        throw HttpError(400, "Not found")
+      }
+      res.json(result)
+  }  
+
+const updateFavoriteCont = async (req, res) => {
+      const {contactId} = req.params;
+      const result = await Contact.findByIdAndUpdate(contactId, req.body, {new: true})
       if(!result){
         throw HttpError(400, "Not found")
       }
@@ -53,4 +56,5 @@ module.exports = {
     addContact: ctrlWrapper(addContactCont),
     removeContact: ctrlWrapper(removeContactCont),
     updateContact: ctrlWrapper(updateContactCont),
+    updateStatusContact: ctrlWrapper(updateFavoriteCont)
 }  
